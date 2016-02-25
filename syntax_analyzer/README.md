@@ -1,7 +1,38 @@
 Syntax Analyzer and Parse Tree Generator
 =======================================
+Things to be handled in go
+1. var declarations too many formats
+2. function declarations
+3.
 
-Grammer of Go Language
+
+Grammer for Go Language:
+
+1.  start → pkg-def program
+2.  program → ext-dec | func
+3.  pkg-def → PACKAGE IDENTIFIER 
+4.  ext-dec → imports | decs
+5.  imports → IMPORT IDENTIFIER
+6.  decs → var-dec | func-dec
+7.  var-dec → id-lst COLONEQ id-val-lst | VAR temp1
+8.  temp1 → id-lst temp2				                      |	#TODO : handle 1 
+9.  temp2 → EQUAL id-val-lst | TYPE temp3
+10. temp3 → EQUAL id-val-lst | e 
+11. id-lst → IDENTIFIER id-lst | IDENTIFIER
+12. id-val-lst → num | STRING   
+13. num → MINUS float-int | float-int 
+14. float-int → FLOAT | INT
+15. 
+Things not handled :
+1. 
+    var (
+    	ToBe   bool       = false
+    	MaxInt uint64     = 1<<64 - 1
+    	z      complex128 = cmplx.Sqrt(-5 + 12i)
+    	k int
+    )
+2.
+Example Grammar of C- Language
 
 1. program → declaration-list
 2. declaration-list → declaration-list declaration | declaration
@@ -14,18 +45,18 @@ Grammer of Go Language
 9. scoped-type-specifier → static type-specifier | type-specifier
 10. type-specifier → int | bool | char
 11. fun-declaration → type-specifier ID ( params ) statement | ID ( params ) statement
-12. params → param-list |
+12. params → param-list | e
 13. param-list → param-list ; param-type-list | param-type-list
 14. param-type-list → type-specifier param-id-list
 15. param-id-list → param-id-list , param-id | param-id
 16. param-id → ID | ID [ ]
 17. statement → expression-stmt | compound-stmt | selection-stmt | iteration-stmt | return-stmt| break-stmt
 18. compound-stmt → { local-declarations statement-list }
-19. local-declarations → local-declarations scoped-var-declaration |
-20. statement-list → statement-list statement |
+19. local-declarations → local-declarations scoped-var-declaration | e
+20. statement-list → statement-list statement | e
 21. expression-stmt → expression ; | ;
 22. selection-stmt → if ( simple-expression ) statement | if ( simple-expression ) statement else statement
-23. iteration-stmt → while ( simple-expression ) statement expression ) statement | foreach ( mutable in simple-
+23. iteration-stmt → while ( simple-expression ) statement | foreach ( mutable in simple-expression ) statement 
 24. return-stmt → return ; | return expression ;
 25. break-stmt → break ;
 26. expression → mutable = expression | mutable += expression | mutable −= expression | mutable ∗= expression | mutable /= expression | mutable ++ | mutable −− | simple- expression
@@ -44,6 +75,13 @@ Grammer of Go Language
 39. mutable → ID | ID [ expression ]
 40. immutable → ( expression ) | call | constant
 41. call → ID ( args )
-42. args → arg-list |
+42. args → arg-list | e
 43. arg-list → arg-list , expression | expression
 44. constant → NUMCONST | CHARCONST | STRINGCONST | true | false
+
+
+References 
+==========
+
+- https://gobyexample.com/variables
+- https://github.com/luciotato/golang-notes/blob/master/OOP.md

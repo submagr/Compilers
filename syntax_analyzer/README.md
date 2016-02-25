@@ -18,11 +18,20 @@ Grammer for Go Language:
 8.  temp1 → id-lst temp2				                      |	#TODO : handle 1 
 9.  temp2 → EQUAL id-val-lst | TYPE temp3
 10. temp3 → EQUAL id-val-lst | e 
-11. id-lst → IDENTIFIER id-lst | IDENTIFIER
+11. id-lst → IDENTIFIER COMMA id-lst | IDENTIFIER
 12. id-val-lst → num | STRING   
 13. num → MINUS float-int | float-int 
 14. float-int → FLOAT | INT
-15. 
+15. func-dec => FUNCTION IDENTIFIER LPAREN param-lst RPAREN ret-lst
+16. param-lst => IDENTIFIER temp4
+17. temp4 => temp5 | temp6
+18. temp5 => TYPE temp7
+19. temp7 => COMMA IDENTIFIER temp7 | e
+20. temp6 => COMMA IDENTIFIER temp6 | TYPE 
+21. ret-lst => TYPE | e | LPAREN temp8 RPAREN
+22. temp8 => temp9 | id-lst TYPE
+23. temp9 => TYPE COMMA temp9 | TYPE
+24. func =>  
 Things not handled :
 1. 
     var (

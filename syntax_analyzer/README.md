@@ -6,15 +6,15 @@ Things to be handled in go
 3.
 
 
-Grammer for Go Language:
+###Grammer for Go Language:
 
 1.  start → pkg-def program
-2.  program → ext-dec | func
+2.  program → ext-dec-lst program | func program
 3.  pkg-def → PACKAGE IDENTIFIER 
 
 -----------------------------------------------------------------------
 
-4.  ext-dec → imports | decs
+4.  ext-dec-lst → imports ext-dec-lst | decs ext-dec-lst
 5.  imports → IMPORT IDENTIFIER
 6.  decs → var-dec | func-dec
 
@@ -25,8 +25,8 @@ Grammer for Go Language:
 9.  temp2 → EQUAL id-val-lst | TYPE temp3
 10. temp3 → EQUAL id-val-lst | e 
 11. id-lst → IDENTIFIER COMMA id-lst | IDENTIFIER
-12. id-val-lst → num | STRING   
-13. num → MINUS float-int | float-int 
+12. id-val-lst → num COMMA id-val-lst | STRING id-val-lst | num | STRING   
+13. num → MINUS float-int | PLUS float-int | float-int 
 14. float-int → FLOAT | INT
 
 -----------------------------------------------------------------------
@@ -46,7 +46,7 @@ Grammer for Go Language:
 24. func => func-dec compound-stmt
 25. compound-stmt => LPAREN stmt-lst RPAREN 
 26. stmt-lst => stmt stmt-lst | stmt
-27. stmt => exp-stmt | selection-stmt | iteration-stmt | return-stmt | break-stmt 
+27. stmt => exp-stmt | selection-stmt | iteration-stmt | return-stmt | break-stmt | continue-stmt
 
 -----------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ Grammer for Go Language:
 30. rel-expression → factor relop factor | factor
 31. relop → LEQ | GREAT | LESS | GEQ | EQEQ | NOTEQ 
 
-32. sum-expression → sum-expression sumop term | term
+32. sum-exp → sum-exp sumop term | term
 33. sumop → PLUS | MINUS | OR | CARET 
 34. term → term mulop unary-expression | unary-expression
 35. mulop → TIMES | DIVIDE | MOD | GG | LL | AMPERS | AMPCAR 
@@ -66,11 +66,27 @@ Grammer for Go Language:
 
 38. factor → immutable | mutable
 39. mutable → TIMES mutable | AMPERS mutable | mutable LBRACE expr-stmt RBRACE | LPAREN mutable RPAREN | IDENTIFIER
-40. immutable → ( expr-stmt ) | call | constant
+40. immutable → ( expr-stmt ) | call | num 
 41. call → ID ( args )
 42. args → arg-list | e
-43. arg-list → arg-list , expr-stmt | exp-stmt
-44. constant → CONSTANT| true | false
+43. arg-list → arg-list COMMA temp13 | temp13
+44. temp13 => simple-expression | sum-exp 
+
+--------------------------------------------------------------------------------
+
+22. selection-stmt → IF simple-expression compound-stmt temp12
+23. temp12 => ELSE compound-stmt | e
+23. iteration-stmt → FOR temp16 compound-stmt 
+24. temp16 => simple-expression | for-1 COLONEQ for-2 COLONEQ for-3     
+24. for-1 => IDENTIFIER temp14 sum-exp | e
+25. temp14 => COLONEQ | EQUAL 
+26. for-2 => simple-expression | e
+27. for-3 => exp-stmt | e 
+24. return-stmt → return temp10 | e   
+25. temp10 => simple-expression | sum-exp | IDENTIFIER temp11 | flaot-int temp11
+26. temp11 => IDENIFIER COMMA temp11 | float-int COMMA temp11 | e
+25. break-stmt → BREAK 
+26. continue-stmt => CONTINUE
 
 ###Comments:
 
@@ -98,15 +114,14 @@ Grammer for Go Language:
 [] WRONG if a+b {}  => Note that, these were correct in C
 
 ###Things not handled :
-1. 
-    var (
+1. var (
     	ToBe   bool       = false
     	MaxInt uint64     = 1<<64 - 1
     	z      complex128 = cmplx.Sqrt(-5 + 12i)
     	k int
     )
-2.
-
+2. boolean data type(lexer)
+3. parenthesis in simple expressions
 
 ###Example Grammar of C- Language
 
@@ -155,26 +170,6 @@ Grammer for Go Language:
 43. arg-list → arg-list , expression | expression
 44. constant → NUMCONST | CHARCONST | STRINGCONST | true | false
 
-
-29. exp-stmt => mutable EQUAL exp-stmt | mutable PLUSEQ exp-stmt | mutable MINUSEQ exp-stmt | mutable TIMESEQ exp-stmt | mutable DIVIDEEQ exp-stmt | mutable PLUSPLUS | mutable MINUSMIN | simple-expression
-27. simple-expression →  simple-expression OROR and-expression | and-expression
-28. and-expression → and-expression AMPAMP unary-rel-expression | unary-rel-expression
-29. unary-rel-expression → NOT unary-rel-expression | rel-expression
-30. rel-expression → sum-expression relop sum-expression | sum-expression
-31. relop → LEQ | GREAT | LESS | GEQ | EQEQ | NOTEQ 
-32. sum-expression → sum-expression sumop term | term
-33. sumop → + | −
-34. term → term mulop unary-expression | unary-expression
-35. mulop → ∗ | / | %
-36. unary-expression → unaryop unary-expression | factor
-37. unaryop → − | ∗ 
-38. factor → immutable | mutable
-39. mutable → TIMES mutable | AMPERS mutable | mutable LBRACE expr-stmt RBRACE | LPAREN mutable RPAREN | IDENTIFIER
-40. immutable → ( expr-stmt ) | call | constant
-41. call → ID ( args )
-42. args → arg-list | e
-43. arg-list → arg-list , expr-stmt | exp-stmt
-44. constant → CONSTANT| true | false
 ###References 
 
 - https://gobyexample.com/variables

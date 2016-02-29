@@ -50,31 +50,52 @@ Grammer for Go Language:
 
 -----------------------------------------------------------------------
 
-29. exp-stmt => mutable EQUAL exp-stmt | mutable PLUSEQ exp-stmt | mutable MINUSEQ exp-stmt | mutable TIMESEQ exp-stmt | mutable DIVIDEEQ exp-stmt | mutable PLUSPLUS | mutable MINUSMIN | simple-expression
-27. simple-expression → simple-expression OR and-expression | and-expression
-28. and-expression → and-expression & unary-rel-expression | unary-rel-expression
-29. unary-rel-expression → ! unary-rel-expression | rel-expression
-30. rel-expression → sum-expression relop sum-expression | sum-expression
-31. relop → <= | < | > | >= | == | ! =
+29. exp-stmt => mutable EQUAL sum-exp | mutable PLUSEQ sum-exp | mutable MINUSEQ sum-exp | mutable TIMESEQ sum-exp | mutable DIVIDEEQ sum-exp | mutable PLUSPLUS | mutable MINUSMIN | simple-expression
+27. simple-expression →  simple-expression OROR and-expression | and-expression
+28. and-expression → and-expression AMPAMP unary-rel-expression | unary-rel-expression
+29. unary-rel-expression → NOT unary-rel-expression | rel-expression
+30. rel-expression → factor relop factor | factor
+31. relop → LEQ | GREAT | LESS | GEQ | EQEQ | NOTEQ 
+
 32. sum-expression → sum-expression sumop term | term
-33. sumop → + | −
+33. sumop → PLUS | MINUS | OR | CARET 
 34. term → term mulop unary-expression | unary-expression
-35. mulop → ∗ | / | %
+35. mulop → TIMES | DIVIDE | MOD | GG | LL | AMPERS | AMPCAR 
 36. unary-expression → unaryop unary-expression | factor
-37. unaryop → − | ∗ 
+37. unaryop → MINUS | TIMES | PLUS 
+
 38. factor → immutable | mutable
-39. mutable → TIMES mutable | AMPERS mutable | mutable LBRACK expr-stmt RBRACK | IDENTIFIER
+39. mutable → TIMES mutable | AMPERS mutable | mutable LBRACE expr-stmt RBRACE | LPAREN mutable RPAREN | IDENTIFIER
 40. immutable → ( expr-stmt ) | call | constant
 41. call → ID ( args )
 42. args → arg-list | e
 43. arg-list → arg-list , expr-stmt | exp-stmt
 44. constant → CONSTANT| true | false
 
-
 ###Comments:
+
 1. mutable means a, b[exp-stmt], something to which we can assign something
 2. exp-stmt means anything that evaluates to a value
-3. 
+3. simple-exp means something that evaluates to BOOLEAN 
+4. sum-exp evaluates to a value that can be assigned to something
+
+###Example Syntax for cross checking: 
+
+[] var a int
+[] var a, b int 
+[]
+
+-------------------------------------------------------------------------------------
+
+[] a = b
+[] a = 2
+[] a += b+c
+[] *a = *b+*c + &a[*c] 
+
+-------------------------------------------------------------------------------------
+
+[] WRONG a == b && b = 2    => These are not correct in go but correct in C
+[] WRONG if a+b {}  => Note that, these were correct in C
 
 ###Things not handled :
 1. 
@@ -135,7 +156,28 @@ Grammer for Go Language:
 44. constant → NUMCONST | CHARCONST | STRINGCONST | true | false
 
 
+29. exp-stmt => mutable EQUAL exp-stmt | mutable PLUSEQ exp-stmt | mutable MINUSEQ exp-stmt | mutable TIMESEQ exp-stmt | mutable DIVIDEEQ exp-stmt | mutable PLUSPLUS | mutable MINUSMIN | simple-expression
+27. simple-expression →  simple-expression OROR and-expression | and-expression
+28. and-expression → and-expression AMPAMP unary-rel-expression | unary-rel-expression
+29. unary-rel-expression → NOT unary-rel-expression | rel-expression
+30. rel-expression → sum-expression relop sum-expression | sum-expression
+31. relop → LEQ | GREAT | LESS | GEQ | EQEQ | NOTEQ 
+32. sum-expression → sum-expression sumop term | term
+33. sumop → + | −
+34. term → term mulop unary-expression | unary-expression
+35. mulop → ∗ | / | %
+36. unary-expression → unaryop unary-expression | factor
+37. unaryop → − | ∗ 
+38. factor → immutable | mutable
+39. mutable → TIMES mutable | AMPERS mutable | mutable LBRACE expr-stmt RBRACE | LPAREN mutable RPAREN | IDENTIFIER
+40. immutable → ( expr-stmt ) | call | constant
+41. call → ID ( args )
+42. args → arg-list | e
+43. arg-list → arg-list , expr-stmt | exp-stmt
+44. constant → CONSTANT| true | false
 ###References 
 
 - https://gobyexample.com/variables
 - https://github.com/luciotato/golang-notes/blob/master/OOP.md
+- https://golang.org/ref/spec [For Various operators and their precedence order] 
+- http://www.tutorialspoint.com/go/go_operators.htm [For Various operators and their precedence order] 
